@@ -2,50 +2,55 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Spin Fix Presisi</title>
+<title>Casino Spin Wheel</title>
 <style>
   body {
     font-family: Arial;
     text-align: center;
-    background: #eef2f7;
+    background: radial-gradient(circle, #1f2937, #020617);
+    color: white;
+  }
+
+  h2 {
+    margin-top: 20px;
   }
 
   .container {
     position: relative;
-    width: 320px;
+    width: 340px;
     margin: 40px auto;
   }
 
-  /* POINTER MERAH */
+  /* POINTER CASINO */
   .pointer {
     position: absolute;
-    top: -18px;
+    top: -22px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent;
-    border-bottom: 24px solid red;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 28px solid #ff0000;
+    filter: drop-shadow(0 0 6px red);
     z-index: 10;
   }
 
   /* RODA */
   .wheel {
-    width: 320px;
-    height: 320px;
+    width: 340px;
+    height: 340px;
     border-radius: 50%;
-    border: 8px solid #333;
-    position: relative;
-    transition: transform 4s ease-out;
+    border: 10px solid #facc15;
     background: conic-gradient(
-      #60a5fa 0deg 60deg,
-      #4ade80 60deg 120deg,
-      #facc15 120deg 180deg,
-      #f87171 180deg 240deg,
-      #a78bfa 240deg 300deg,
-      #34d399 300deg 360deg
+      #2563eb 0deg 60deg,
+      #16a34a 60deg 120deg,
+      #ca8a04 120deg 180deg,
+      #dc2626 180deg 240deg,
+      #7c3aed 240deg 300deg,
+      #059669 300deg 360deg
     );
+    position: relative;
   }
 
   .label {
@@ -56,18 +61,31 @@
     font-size: 13px;
     font-weight: bold;
     width: 120px;
+    color: white;
+    text-shadow: 0 0 4px black;
   }
 
   button {
     margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 12px 24px;
+    font-size: 18px;
+    background: gold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #result {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #facc15;
   }
 </style>
 </head>
 <body>
 
-<h2>🎡 Spin Anti Meleset</h2>
+<h2>🎰 Casino Spin</h2>
 
 <div class="container">
   <div class="pointer"></div>
@@ -90,44 +108,46 @@ const options = [
 const wheel = document.getElementById("wheel");
 const angle = 360 / options.length;
 
-// label
+// buat label
 options.forEach((text, i) => {
   const div = document.createElement("div");
   div.className = "label";
 
-  const midAngle = i * angle + angle / 2;
+  const mid = i * angle + angle / 2;
 
   div.style.transform = `
-    rotate(${midAngle}deg)
-    translate(30px, -10px)
+    rotate(${mid}deg)
+    translate(40px, -10px)
   `;
 
   div.innerText = text;
   wheel.appendChild(div);
 });
 
-let currentRotation = 0;
-
 function spin() {
-  const targetIndex = 0; // "Dirumah saja"
+  const targetIndex = 0; // selalu "Dirumah saja"
 
-  // posisi tengah segmen target
   const targetAngle = targetIndex * angle + angle / 2;
 
-  // pointer di atas = 0deg, jadi kita putar kebalikan
-  const stopAt = 360 - targetAngle;
-
-  // tambahin putaran biar dramatis
-  const spins = 5 * 360;
-
-  currentRotation += spins + stopAt;
-
-  wheel.style.transform = `rotate(${currentRotation}deg)`;
+  // reset dulu biar tidak akumulasi
+  wheel.style.transition = "none";
+  wheel.style.transform = "rotate(0deg)";
 
   setTimeout(() => {
+
+    // spin banyak + berhenti tepat di target
+    const finalRotation = (360 * 6) + (360 - targetAngle);
+
+    wheel.style.transition = "transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)";
+    wheel.style.transform = `rotate(${finalRotation}deg)`;
+
+  }, 50);
+
+  // hasil
+  setTimeout(() => {
     document.getElementById("result").innerText =
-      "Hasil: Dirumah saja 🏠";
-  }, 4000);
+      "🏠 Dirumah saja (fix no debat)";
+  }, 4200);
 }
 </script>
 
