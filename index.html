@@ -2,16 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Spin Pilihan</title>
+<title>Spin Fix Presisi</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     text-align: center;
     background: #eef2f7;
-  }
-
-  h2 {
-    margin-top: 20px;
   }
 
   .container {
@@ -20,7 +16,7 @@
     margin: 40px auto;
   }
 
-  /* JARUM */
+  /* POINTER MERAH */
   .pointer {
     position: absolute;
     top: -18px;
@@ -28,9 +24,9 @@
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 22px solid red;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-bottom: 24px solid red;
     z-index: 10;
   }
 
@@ -41,7 +37,7 @@
     border-radius: 50%;
     border: 8px solid #333;
     position: relative;
-    transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: transform 4s ease-out;
     background: conic-gradient(
       #60a5fa 0deg 60deg,
       #4ade80 60deg 120deg,
@@ -52,7 +48,6 @@
     );
   }
 
-  /* TEXT */
   .label {
     position: absolute;
     left: 50%;
@@ -61,26 +56,18 @@
     font-size: 13px;
     font-weight: bold;
     width: 120px;
-    text-align: left;
   }
 
   button {
+    margin-top: 20px;
     padding: 10px 20px;
     font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-
-  #result {
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 18px;
   }
 </style>
 </head>
 <body>
 
-<h2>🎡 Spin Pilihan</h2>
+<h2>🎡 Spin Anti Meleset</h2>
 
 <div class="container">
   <div class="pointer"></div>
@@ -103,34 +90,39 @@ const options = [
 const wheel = document.getElementById("wheel");
 const angle = 360 / options.length;
 
-// buat label teks
+// label
 options.forEach((text, i) => {
   const div = document.createElement("div");
   div.className = "label";
 
-  const rotate = i * angle + angle / 2;
+  const midAngle = i * angle + angle / 2;
 
   div.style.transform = `
-    rotate(${rotate}deg)
-    translate(20px, -10px)
+    rotate(${midAngle}deg)
+    translate(30px, -10px)
   `;
 
   div.innerText = text;
   wheel.appendChild(div);
 });
 
-let rotation = 0;
+let currentRotation = 0;
 
 function spin() {
-  const targetIndex = 0; // selalu "Dirumah saja"
+  const targetIndex = 0; // "Dirumah saja"
 
-  const stopAngle = 360 - (targetIndex * angle) - (angle / 2);
+  // posisi tengah segmen target
+  const targetAngle = targetIndex * angle + angle / 2;
 
-  const extra = 360 * 5;
+  // pointer di atas = 0deg, jadi kita putar kebalikan
+  const stopAt = 360 - targetAngle;
 
-  rotation += extra + stopAngle;
+  // tambahin putaran biar dramatis
+  const spins = 5 * 360;
 
-  wheel.style.transform = `rotate(${rotation}deg)`;
+  currentRotation += spins + stopAt;
+
+  wheel.style.transform = `rotate(${currentRotation}deg)`;
 
   setTimeout(() => {
     document.getElementById("result").innerText =
